@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minko Shop - Интернет-магазин</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .products {
+            padding: 30px;
+        }
+
+        .products h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+            font-size: 2em;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .product-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border-color: #ff6b6b;
+        }
+
+        .product-image {
+            width: 100%;
+            height: 150px;
+            background: linear-gradient(45deg, #ddd, #eee);
+            border-radius: 10px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3em;
+        }
+
+        .product-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .product-price {
+            font-size: 1.5em;
+            color: #ff6b6b;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .buy-btn {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .buy-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+        }
+
+        .cart {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .cart h3 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .cart-items {
+            margin-bottom: 20px;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .total {
+            text-align: center;
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #ff6b6b;
+            margin-bottom: 20px;
+        }
+
+        .checkout-btn {
+            background: linear-gradient(135deg, #4ecdc4, #44a08d);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .checkout-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(78, 205, 196, 0.4);
+        }
+
+        .empty-cart {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+            padding: 20px;
+        }
+
+        /* Стили для категорий */
+        .categories {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+
+        .category-btn {
+            background: #f8f9fa;
+            border: 2px solid #ddd;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .category-btn:hover {
+            background: #ff6b6b;
+            color: white;
+            border-color: #ff6b6b;
+        }
+
+        .category-btn.active {
+            background: #ff6b6b;
+            color: white;
+            border-color: #ff6b6b;
+        }
+
+        /* Стили для поиска */
+        .search-container {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        #searchInput {
+            width: 100%;
+            max-width: 400px;
+            padding: 15px 20px;
+            border: 2px solid #ddd;
+            border-radius: 25px;
+            font-size: 1em;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        #searchInput:focus {
+            border-color: #ff6b6b;
+        }
+
+        /* Анимации для товаров */
+        .product-card.hidden {
+            display: none;
+        }
+
+        .product-card.fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Улучшенные стили для карточек товаров */
+        .product-card {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .product-card:hover::before {
+            left: 100%;
+        }
+
+        /* Стили для мобильных устройств */
+        @media (max-width: 600px) {
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .product-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+
+            .categories {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .category-btn {
+                width: 100%;
+                max-width: 200px;
+            }
+
+            #searchInput {
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🛍️ Minko Shop</h1>
+            <p>Добро пожаловать в наш интернет-магазин!</p>
+        </div>
+
+        <div class="products">
+            <h2>Наши товары</h2>
+            
+            <!-- Категории товаров -->
+            <div class="categories">
+                <button class="category-btn active" onclick="filterProducts('all')">Все товары</button>
+                <button class="category-btn" onclick="filterProducts('electronics')">Электроника</button>
+                <button class="category-btn" onclick="filterProducts('clothing')">Одежда</button>
+                <button class="category-btn" onclick="filterProducts('home')">Дом и сад</button>
+                <button class="category-btn" onclick="filterProducts('sports')">Спорт</button>
+                <button class="category-btn" onclick="filterProducts('books')">Книги</button>
+            </div>
+
+            <!-- Поиск -->
+            <div class="search-container">
+                <input type="text" id="searchInput" placeholder="🔍 Поиск товаров..." onkeyup="searchProducts()">
+            </div>
+
+            <div class="product-grid" id="productGrid">
+                <!-- Электроника -->
+                <div class="product-card" data-category="electronics">
+                    <div class="product-image">📱</div>
+                    <div class="product-title">iPhone 15 Pro</div>
+                    <div class="product-price">89,990 ₽</div>
+                    <button class="buy-btn" onclick="addToCart('iPhone 15 Pro', 89990)">Купить</button>
+                </div>
+
+                <div class="product-card" data-category="electronics">
+                    <div class="product-image">💻</div>
+                    <div class="product-title">MacBook Air M2</div>
+                    <div class="product-price">129,990 ₽</div>
+                    <button class="buy-btn" onclick="addToCart('MacBook Air M2', 129990)">Купить</button>
+                </div>
+
+                <div class="product-card" data-category="electronics">
+                    <div class="product-image">🎧</div>
+                    <div class="product-title">AirPods Pro 2</div>
+                    <div class="product-price">24,990 ₽</div>
+                    <button class="buy-btn" onclick="addToCart('AirPods Pro 2', 24990)">Купить</button>
+                </div>
+
+                <div class="product-card" data-category="electronics">
+                    <div class="product-image">⌚</div>
+                    <div class="product-title">Apple Watch Series 9</div>
+                    <div class="product-price">34,990 ₽</div>
+                    <button class="buy-btn" onclick="addToCart('Apple Watch Series 9', 34990)">Купить</button>
+                </div>
+
+                <div class="product-card" data-category="electronics">
+                    <div class="product-image">📷</div>
+                    <div class="product-title">Canon EOS R6</div>
+                    <div class="product-price">189,990 ₽</div>
+                    <button class="buy-btn" onclick="addToCart('Canon EOS R6', 189990)">Купить</button>
+                </div>
+
+                <div class="product-card" data-category="electronics">
+                    <div class="product-image">🎮</div>
+                    <div class="product-title">PlayStation 5</div>
+                    <div class="product-price">59,990 ₽</div>
+                    <button class="buy-btn" onclick="addToCart('PlayStation 5', 59990)">Купить</button>
+                </div>
+
+                <div class="product-card" data-category="electronics">
+                    <div class="product-image">🖥️</div>
+                    <div class="product-title">Samsung 4K TV 55"</div>
+                    <div class="product-price">89,990 ₽</div>
+                    <button class="buy-btn" onclick="addToCart('Samsung 4K TV 55"', 89990)">Купить</button>
+                </div>
+
+                <div class="product-card" data-category="electronics">
+                    <div class="product-image">🔊</div>
+                    <div class="product-title">JBL PartyBox 310</div>
+                    <div class="product-price">34,990 ₽</div>
+                    <button class="buy-btn" onclick="addToCart('JBL PartyBox 310', 34990)">Купить</button>
+                </div>
+
+                <!-- Одежда -->
+                <div class="product-card" data-category="clothing">
+                    <div class="product-image">👕</div>
+                    <div class="product-title">Nike Air Max 270</div>
+                    <div class="product-price">12,990 ₽</div>
+                    <button class="buy-btn" onclick="addToCart('Nike Air Max 270', 12990)">Купить</button>
+                </div>
+
+                <div class="product-card" data-category="clothing">
+                    <div class="product-image">👔</div>
+                    <div class="product-title">Костюм Hugo Boss</div>
+                    <div class="product-price">45,990 ₽</div>
+                    <button class="buy-btn" onclick="addToCart('Костюм Hugo Boss', 45990)">Купить</button>
+                </div>
+
+                <div class="product-card" data-category="clothing">
+                    <div class="product-image">👗</div>
+                    <div class="product-title">Платье Zara</div>
+                    <div class="product-price">3,990 ₽</div>
+                    <button class="buy-btn" onclick="addToCart('Платье Zara', 3990)">Купить</button>
+                </div>
+
+                <div class="product-card" data-category="clothing">
+                    <div class="product-image">🧥</div>
+                    <div class="product-title">Куртка The North Face</div>
+                    <div class="product-price">15,990 ₽</div>
+                    <button class="buy-btn" onclick="addToCart('Куртка The North Face', 15990)">Купить</button>
+                </div>
+
+                <!-- Дом и сад -->
+                <div class="product-card" data-category="home">
+                    <div class="product-image">🛋️</div>
+                    <div class="product-title">Диван IKEA</div>
+                    <div class="product-price">25,990 ₽</div>
+                    <button class="buy-btn" onclick="addToCart('Диван IKEA', 25990)">Купить</button>
+                </div>
+
+                <div class="product-card" data-category="home">
+                    <div class="product-image">🛏️</div>
+                    <div class="product-title">Матрас Tempur</div>
+                    <div class="product-price">89,990 ₽</div>
+                    <button class="buy-btn" onclick="addToCart('Матрас Tempur', 89990)">Купить</button>
+                </div>
+
+                <div class="product-card" data-category="home">
+                    <div class="product-image">🍳</div>
+                    <div class="product-title">Набор посуды Tefal</div>
+                    <div class="product-price">8,990 ₽</div>
+                    <button class="buy-btn" onclick="addToCart('Набор посуды Tefal', 8990)">Купить</button>
+                </div>
+
+                <div class="product-card" data-category="home">
+                    <div class="product-image">🌱</div>
+                    <div class="product-title">Комнатные растения</div>
+                    <div class="product-price">1,990 ₽</div>
+                    <button class="buy-btn" onclick="addToCart('Комнатные растения', 1990)">Купить</button>
+                </div>
+
+                <!-- Спорт -->
+                <div class="product-card" data-category="sports">
+                    <div class="product-image">🏋️</div>
+                    <div class="product-title">Гантели 20кг</div>
+                    <div class="product-price">4,990 ₽</div>
+                    <button class="buy-btn" onclick="addToCart('Гантели 20кг', 4990)">Купить</button>
+                </div>
+
+                <div class="product-card" data-category="sports">
+                    <div class="product-image">🚴</div>
+                    <div class="product-title">Велосипед Trek</div>
+                    <div class="product-price">45,990 ₽</div>
+                    <button class="buy-btn" onclick="addToCart('Велосипед Trek', 45990)">Купить</button>
+                </div>
+
+                <div class="product-card" data-category="sports">
+                    <div class="product-image">🏃</div>
+                    <div class="product-title">Беговая дорожка</div>
+                    <div class="product-price">89,990 ₽</div>
+                    <button class="buy-btn" onclick="addToCart('Беговая дорожка', 89990)">Купить</button>
+                </div>
+
+                <div class="product-card" data-category="sports">
+                    <div class="product-image">⚽</div>
+                    <div class="product-title">Футбольный мяч Adidas</div>
+                    <div class="product-price">2,990 ₽</div>
+                    <button class="buy-btn" onclick="addToCart('Футбольный мяч Adidas', 2990)">Купить</button>
+                </div>
+
+                <!-- Книги -->
+                <div class="product-card" data-category="books">
+                    <div class="product-image">📚</div>
+                    <div class="product-title">"1984" Джордж Оруэлл</div>
+                    <div class="product-price">599 ₽</div>
+                    <button class="buy-btn" onclick="addToCart('"1984" Джордж Оруэлл', 599)">Купить</button>
+                </div>
+
+                <div class="product-card" data-category="books">
+                    <div class="product-image">📖</div>
+                    <div class="product-title">"Гарри Поттер" Дж.К. Роулинг</div>
+                    <div class="product-price">1,290 ₽</div>
+                    <button class="buy-btn" onclick="addToCart('"Гарри Поттер" Дж.К. Роулинг', 1290)">Купить</button>
+                </div>
+
+                <div class="product-card" data-category="books">
+                    <div class="product-image">📘</div>
+                    <div class="product-title">"Война и мир" Л.Н. Толстой</div>
+                    <div class="product-price">890 ₽</div>
+                    <button class="buy-btn" onclick="addToCart('"Война и мир" Л.Н. Толстой', 890)">Купить</button>
+                </div>
+
+                <div class="product-card" data-category="books">
+                    <div class="product-image">📗</div>
+                    <div class="product-title">"Мастер и Маргарита" М. Булгаков</div>
+                    <div class="product-price">690 ₽</div>
+                    <button class="buy-btn" onclick="addToCart('"Мастер и Маргарита" М. Булгаков', 690)">Купить</button>
+                </div>
+
+                <!-- Дополнительные товары -->
+                <div class="product-card" data-category="electronics">
+                    <div class="product-image">⌨️</div>
+                    <div class="product-title">Механическая клавиатура</div>
+                    <div class="product-price">8,990 ₽</div>
+                    <button class="buy-btn" onclick="addToCart('Механическая клавиатура', 8990)">Купить</button>
+                </div>
+
+                <div class="product-card" data-category="electronics">
+                    <div class="product-image">🖱️</div>
+                    <div class="product-title">Gaming мышь Logitech</div>
+                    <div class="product-price">4,990 ₽</div>
+                    <button class="buy-btn" onclick="addToCart('Gaming мышь Logitech', 4990)">Купить</button>
+                </div>
+
+                <div class="product-card" data-category="home">
+                    <div class="product-image">💡</div>
+                    <div class="product-title">Умные лампы Philips Hue</div>
+                    <div class="product-price">3,990 ₽</div>
+                    <button class="buy-btn" onclick="addToCart('Умные лампы Philips Hue', 3990)">Купить</button>
+                </div>
+
+                <div class="product-card" data-category="clothing">
+                    <div class="product-image">👟</div>
+                    <div class="product-title">Adidas Ultraboost 22</div>
+                    <div class="product-price">15,990 ₽</div>
+                    <button class="buy-btn" onclick="addToCart('Adidas Ultraboost 22', 15990)">Купить</button>
+                </div>
+            </div>
+
+            <div class="cart">
+                <h3>🛒 Корзина</h3>
+                <div class="cart-items" id="cartItems">
+                    <div class="empty-cart">Корзина пуста</div>
+                </div>
+                <div class="total" id="total">Итого: 0 ₽</div>
+                <button class="checkout-btn" onclick="checkout()" id="checkoutBtn" style="display: none;">
+                    Оформить заказ
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let cart = [];
+
+        function addToCart(name, price) {
+            const existingItem = cart.find(item => item.name === name);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({
+                    name: name,
+                    price: price,
+                    quantity: 1
+                });
+            }
+            
+            updateCart();
+            showNotification(`Добавлено в корзину: ${name}`);
+        }
+
+        function removeFromCart(name) {
+            cart = cart.filter(item => item.name !== name);
+            updateCart();
+            showNotification(`Удалено из корзины: ${name}`);
+        }
+
+        function updateCart() {
+            const cartItems = document.getElementById('cartItems');
+            const total = document.getElementById('total');
+            const checkoutBtn = document.getElementById('checkoutBtn');
+
+            if (cart.length === 0) {
+                cartItems.innerHTML = '<div class="empty-cart">Корзина пуста</div>';
+                checkoutBtn.style.display = 'none';
+            } else {
+                cartItems.innerHTML = cart.map(item => `
+                    <div class="cart-item">
+                        <span>${item.name} (${item.quantity} шт.)</span>
+                        <div>
+                            <span style="margin-right: 15px;">${item.price * item.quantity} ₽</span>
+                            <button onclick="removeFromCart('${item.name}')" 
+                                    style="background: #ff6b6b; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer;">
+                                ✕
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+                checkoutBtn.style.display = 'block';
+            }
+
+            const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            total.textContent = `Итого: ${totalPrice.toLocaleString()} ₽`;
+        }
+
+        function checkout() {
+            const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            
+            if (confirm(`Оформить заказ на сумму ${totalPrice.toLocaleString()} ₽?`)) {
+                alert('Заказ успешно оформлен! Спасибо за покупку! 🎉');
+                cart = [];
+                updateCart();
+            }
+        }
+
+        function showNotification(message) {
+            // Создаем уведомление
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #4ecdc4;
+                color: white;
+                padding: 15px 20px;
+                border-radius: 10px;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+                z-index: 1000;
+                animation: slideIn 0.3s ease;
+            `;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 2000);
+        }
+
+        // CSS для анимации уведомлений
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Функции фильтрации и поиска
+        function filterProducts(category) {
+            const products = document.querySelectorAll('.product-card');
+            const categoryButtons = document.querySelectorAll('.category-btn');
+            
+            // Обновляем активную кнопку категории
+            categoryButtons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Фильтруем товары
+            products.forEach(product => {
+                if (category === 'all' || product.dataset.category === category) {
+                    product.classList.remove('hidden');
+                    product.classList.add('fade-in');
+                } else {
+                    product.classList.add('hidden');
+                    product.classList.remove('fade-in');
+                }
+            });
+            
+            // Очищаем поиск при смене категории
+            document.getElementById('searchInput').value = '';
+        }
+
+        function searchProducts() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const products = document.querySelectorAll('.product-card');
+            
+            products.forEach(product => {
+                const title = product.querySelector('.product-title').textContent.toLowerCase();
+                const price = product.querySelector('.product-price').textContent.toLowerCase();
+                
+                if (title.includes(searchTerm) || price.includes(searchTerm)) {
+                    product.classList.remove('hidden');
+                    product.classList.add('fade-in');
+                } else {
+                    product.classList.add('hidden');
+                    product.classList.remove('fade-in');
+                }
+            });
+        }
+
+        // Функция для показа статистики товаров
+        function showProductStats() {
+            const totalProducts = document.querySelectorAll('.product-card').length;
+            const categories = {
+                electronics: document.querySelectorAll('[data-category="electronics"]').length,
+                clothing: document.querySelectorAll('[data-category="clothing"]').length,
+                home: document.querySelectorAll('[data-category="home"]').length,
+                sports: document.querySelectorAll('[data-category="sports"]').length,
+                books: document.querySelectorAll('[data-category="books"]').length
+            };
+            
+            console.log('📊 Статистика товаров:');
+            console.log(`Всего товаров: ${totalProducts}`);
+            console.log('По категориям:', categories);
+        }
+
+        // Улучшенная функция уведомлений
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            const colors = {
+                success: '#4ecdc4',
+                error: '#ff6b6b',
+                warning: '#ffa726',
+                info: '#42a5f5'
+            };
+            
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${colors[type] || colors.success};
+                color: white;
+                padding: 15px 20px;
+                border-radius: 10px;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+                z-index: 1000;
+                animation: slideIn 0.3s ease;
+                max-width: 300px;
+                word-wrap: break-word;
+            `;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    if (document.body.contains(notification)) {
+                        document.body.removeChild(notification);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        // Функция для добавления товара в избранное (заглушка)
+        function addToFavorites(productName) {
+            showNotification(`❤️ ${productName} добавлен в избранное!`, 'info');
+        }
+
+        // Инициализация при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🛍️ Minko Shop загружен!');
+            showProductStats();
+            
+            // Добавляем обработчики для кнопок избранного (если будут добавлены)
+            const favoriteButtons = document.querySelectorAll('.favorite-btn');
+            favoriteButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const productName = this.closest('.product-card').querySelector('.product-title').textContent;
+                    addToFavorites(productName);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
